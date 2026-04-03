@@ -199,9 +199,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 <!-- ── AUTH OVERLAY ── -->
 <div id="auth-overlay">
   <div class="auth-title">⚽ WC 2026<br>SİMÜLATÖR</div>
-  <p class="auth-subtitle">Bir isim seç veya kendi adını yaz</p>
-  <div class="auth-grid" id="auth-grid"></div>
-  <div class="auth-or">— veya —</div>
+  <p class="auth-subtitle">Adını girerek başla</p>
   <div class="auth-custom">
     <input type="text" class="auth-input" id="custom-name-inp" placeholder="Adını gir…" maxlength="20"/>
     <button class="auth-go" id="custom-name-btn">Gir →</button>
@@ -471,14 +469,7 @@ const FBP=()=>`worldcup2026/${curUser}`;
 
 // ── AUTH ─────────────────────────────────────────────────────────────────────
 const authEl=document.getElementById("auth-overlay");
-const authGrid=document.getElementById("auth-grid");
-PRESET_USERS.forEach(u=>{
-  const btn=document.createElement("button");btn.className="auth-btn";
-  btn.style.borderColor=u.color+"66";btn.style.background=u.color+"22";
-  btn.textContent=u.name;
-  btn.addEventListener("click",()=>login(u.name));
-  authGrid.appendChild(btn);
-});
+
 document.getElementById("custom-name-btn").addEventListener("click",()=>{
   const v=document.getElementById("custom-name-inp").value.trim();
   if(v.length>=1) login(v);
