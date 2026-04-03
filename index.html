@@ -230,7 +230,6 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 <div id="wc-loading"><div class="wc-spinner"></div><p style="color:var(--text-muted);font-size:.9rem">Yükleniyor…</p></div>
 <div id="wc-toast"></div>
 
-<!-- ── AUTH OVERLAY ── -->
 <div id="auth-overlay">
   <div class="auth-title">⚽ WC 2026<br>SİMÜLATÖR</div>
   <p class="auth-subtitle">Adını girerek başla</p>
@@ -238,7 +237,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
     <input type="text" class="auth-input" id="custom-name-inp" placeholder="Adını gir…" maxlength="20"/>
     <button class="auth-go" id="custom-name-btn">Gir →</button>
   </div>
-  <!-- Giriş Sayfası Referans Linki -->
+  
   <a href="https://x.com/rucht_" target="_blank" class="credit-link auth-credit">
     <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 5.918H5.078z"/></svg>
     Rucht
@@ -262,7 +261,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 <div class="layout-wrapper">
   
   <div class="main-content">
-    <!-- ── GROUP STAGE ── -->
+    
     <div class="page active" id="page-group-stage">
       <div class="gs-title">GRUP AŞAMASI</div>
       <div class="gs-subtitle">Her maç için sonucu tahmin et</div>
@@ -294,7 +293,6 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
       </div>
     </div>
 
-    <!-- ── STANDINGS ── -->
     <div class="page" id="page-standings">
       <div class="standings-page">
         <div class="gs-title">PUAN DURUMU</div>
@@ -303,7 +301,6 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
       </div>
     </div>
 
-    <!-- ── KNOCKOUT ── -->
     <div class="page" id="page-knockout">
       <div class="bracket-page">
         <div class="round-title" id="ko-round-title">SON 32</div>
@@ -313,7 +310,6 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
       </div>
     </div>
 
-    <!-- ── RESULTS ── -->
     <div class="page" id="page-results">
       <div class="results-page">
         <div class="result-wrap" id="my-result-wrap"></div>
@@ -331,16 +327,14 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
           <div class="friends-grid" id="friends-grid"></div>
         </div>
 
-        <!-- Sonuç Sayfası Referans Linki -->
         <a href="https://x.com/rucht_" target="_blank" class="credit-link results-credit">
           <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 5.918H5.078z"/></svg>
           Rucht
         </a>
       </div>
     </div>
-  </div> <!-- main-content bitişi -->
+  </div> 
 
-  <!-- ── SIDEBAR (STATS) ── -->
   <aside class="sidebar" id="stats-sidebar">
     <div class="sidebar-title">📊 TURNUVA İSTATİSTİKLERİ</div>
     
@@ -359,7 +353,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
     </div>
   </aside>
 
-</div> <!-- layout-wrapper bitişi -->
+</div> 
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
@@ -562,7 +556,6 @@ let standings={};
 let thirdPlaceAdvancers=[];
 let playerStats={};
 
-// DİKKAT: Buradaki "thirdresults" ve "finalresults" isimleri hatayı çözen asıl düzeltme noktası.
 let koState={
   r32:[],r16:[],qf:[],sf:[],third:[],final:[],
   r32results:{},r16results:{},qfresults:{},sfresults:{},thirdresults:{},finalresults:{}
@@ -624,45 +617,51 @@ function wPick(arr){
   return arr[arr.length-1];
 }
 
-// ── SCORE & EVENTS GEN (YENİ POWER RANKING SİSTEMİ) ────────────────────────
+// ── SCORE & EVENTS GEN (GERÇEKÇİ POWER RANKING SİSTEMİ) ────────────────────────
 function getRank(t) { return TEAM_RANKS[t] || 24; }
 
 function generateRealisticScore(t1, t2, outcome) {
   const r1 = getRank(t1);
   const r2 = getRank(t2);
-  let diff = r2 - r1; // pozitifse t1 (Team 1) daha güçlü demektir.
+  let diff = r2 - r1; // pozitifse t1 daha güçlü
 
   if (outcome === "draw") {
-    // Beraberlik durumu: Arada inanılmaz güç farkı varsa (Uçurum) güçsüz takım otobüs çekmiştir, az gollü (0-0, 1-1) biter.
-    // Denk takımlarsa (2-2) ihtimali de dahil edilir.
-    const isMismatch = Math.abs(diff) > 20;
-    const g = rng(0, isMismatch ? 1 : 2);
+    const isMismatch = Math.abs(diff) > 20; 
+    let g = rng(0, 1); // Çoğunlukla 0-0, 1-1
+    if (!isMismatch && Math.random() < 0.15) g = 2; // Nadir 2-2 ihtimali
     return [g, g];
   }
 
   const t1Wins = outcome === "win1";
-  const rankDiff = t1Wins ? (r2 - r1) : (r1 - r2); // Kazanan takımın lehine olan güç farkı
-
+  const rankDiff = t1Wins ? diff : -diff; 
   let wGoals = 1, lGoals = 0;
+  let rand = Math.random();
 
   if (rankDiff > 25) {
-    // 1. Ağır Favori Rahat Kazanıyor (Çok gollü, fark)
-    wGoals = rng(3, 6);
-    lGoals = rng(0, 1);
-  } else if (rankDiff > 12) {
-    // 2. Net Favori Kazanıyor (Rahat galibiyet ama abartılı değil)
-    wGoals = rng(2, 4);
-    lGoals = rng(0, wGoals - 1);
-    if(lGoals === wGoals) lGoals--;
-  } else if (rankDiff >= -12) {
-    // 3. Denk Takımlar veya Hafif Sürpriz (Kıyasıya rekabet, yakın skor)
-    wGoals = rng(1, 3);
-    lGoals = wGoals - rng(1, 2);
-    if (lGoals < 0) lGoals = 0;
+    // Ağır Favori Rahat Kazanıyor (Çoğunlukla 2-0, 3-0, 3-1. Çok nadir 4-0, 5-0)
+    if (rand < 0.4) { wGoals = 2; lGoals = 0; }
+    else if (rand < 0.7) { wGoals = 3; lGoals = 0; }
+    else if (rand < 0.85) { wGoals = 3; lGoals = 1; }
+    else if (rand < 0.95) { wGoals = 4; lGoals = rng(0,1); }
+    else { wGoals = rng(5, 6); lGoals = 0; }
+  } else if (rankDiff > 10) {
+    // Net Favori Kazanıyor (1-0, 2-0, 2-1)
+    if (rand < 0.35) { wGoals = 2; lGoals = 0; }
+    else if (rand < 0.65) { wGoals = 2; lGoals = 1; }
+    else if (rand < 0.85) { wGoals = 1; lGoals = 0; }
+    else if (rand < 0.95) { wGoals = 3; lGoals = rng(0,1); }
+    else { wGoals = 3; lGoals = 2; }
+  } else if (rankDiff >= -10) {
+    // Denk Takımlar (1-0, 2-1 en yaygın)
+    if (rand < 0.4) { wGoals = 1; lGoals = 0; }
+    else if (rand < 0.75) { wGoals = 2; lGoals = 1; }
+    else if (rand < 0.9) { wGoals = 2; lGoals = 0; }
+    else { wGoals = 3; lGoals = 2; }
   } else {
-    // 4. BÜYÜK SÜPRİZ! Underdog yendi. (Maç ucu ucuna bitmeli, fark olamaz)
-    wGoals = rng(1, 2);
-    lGoals = wGoals - 1;
+    // BÜYÜK SÜPRİZ! Underdog yendi. (1-0, 2-1 şans eseri)
+    if (rand < 0.6) { wGoals = 1; lGoals = 0; }
+    else if (rand < 0.9) { wGoals = 2; lGoals = 1; }
+    else { wGoals = 2; lGoals = 0; } 
   }
 
   return t1Wins ? [wGoals, lGoals] : [lGoals, wGoals];
@@ -671,14 +670,55 @@ function generateRealisticScore(t1, t2, outcome) {
 const genScore = generateRealisticScore;
 const genKOScore = generateRealisticScore;
 
-function genEvents(t1,t2,s1,s2){
+// KIRMIZI KART SİSTEMİ EKLENDİ
+function genEvents(t1,t2,s1,s2, maxMins=90){
   const ev=[];const p1=TEAMS[t1]?.players||["Player"];const p2=TEAMS[t2]?.players||["Player"];
   const used=new Set();
   const uMin=(a,b)=>{let m;do{m=rng(a,b)}while(used.has(m));used.add(m);return m};
-  for(let i=0;i<s1;i++){const m=uMin(1,120);const sc=wPick(p1);const as=Math.random()>.5?pick(p1.filter(x=>x!==sc)):null;ev.push({m,team:1,teamName:t1,sc,as,type:"goal"});}
-  for(let i=0;i<s2;i++){const m=uMin(1,120);const sc=wPick(p2);const as=Math.random()>.5?pick(p2.filter(x=>x!==sc)):null;ev.push({m,team:2,teamName:t2,sc,as,type:"goal"});}
-  const yc=rng(1,4);
-  for(let i=0;i<yc;i++){const m=uMin(10,119);const t=Math.random()>.5?1:2;const pl=wPick(t===1?p1:p2);ev.push({m,team:t,pl,type:"yellow"});}
+  
+  // Önce golleri atayalım
+  for(let i=0;i<s1;i++){const m=uMin(1,maxMins);const sc=wPick(p1);const as=Math.random()>.5?pick(p1.filter(x=>x!==sc)):null;ev.push({m,team:1,teamName:t1,sc,as,type:"goal"});}
+  for(let i=0;i<s2;i++){const m=uMin(1,maxMins);const sc=wPick(p2);const as=Math.random()>.5?pick(p2.filter(x=>x!==sc)):null;ev.push({m,team:2,teamName:t2,sc,as,type:"goal"});}
+  
+  // Şimdi Kartları atayalım
+  const ycCount=rng(2, 5); // Ortalama 2-5 sarı kart
+  let ycs = {}; // Oyuncuların sarı kartlarını tut
+  let reds = new Set(); // Kırmızı yiyenleri tut
+
+  for(let i=0; i<ycCount; i++){
+    const m = uMin(10, maxMins-1);
+    const t = Math.random() > 0.5 ? 1 : 2;
+    // Önceden kırmızı yiyen oyuncu tekrar kart göremez
+    const pool = (t===1?p1:p2).filter(p=>!reds.has(p));
+    
+    // MANTIK FİLTRESİ: Kırmızı yiyecekse veya sarı görecekse bile, ilerleyen dakikalarda GOL ATMIŞ BİRİ OLMASIN (Ölümsüzlük fix)
+    const validPool = pool.filter(p => !ev.some(e => e.sc === p && e.m >= m));
+    if(validPool.length === 0) continue;
+    
+    const pl = wPick(validPool);
+    
+    if(ycs[pl]) {
+      // İkinci Sarısı! Kırmızı Karta dönüşüyor
+      ev.push({m,team:t,pl,type:"red", reason:"2nd Yellow"});
+      reds.add(pl);
+    } else {
+      ycs[pl] = true;
+      ev.push({m,team:t,pl,type:"yellow"});
+    }
+  }
+
+  // Direkt Kırmızı Kart İhtimali (%12)
+  if(Math.random() < 0.12) {
+    const m = uMin(15, maxMins-1);
+    const t = Math.random() > 0.5 ? 1 : 2;
+    const validPool = (t===1?p1:p2).filter(p => !reds.has(p) && !ev.some(e => e.sc === p && e.m >= m));
+    if(validPool.length > 0) {
+      const pl = wPick(validPool);
+      ev.push({m,team:t,pl,type:"red", reason:"Straight Red"});
+      reds.add(pl);
+    }
+  }
+
   return ev.sort((a,b)=>a.m-b.m);
 }
 
@@ -753,12 +793,16 @@ function animateSim(m,evs,s1,s2){
     function next(){
       if(i>=evs.length){sc.textContent=`${s1} - ${s2}`;setTimeout(res,350);return;}
       const ev=evs[i++];const div=document.createElement("div");div.className="sim-event";
+      
       if(ev.type==="goal"){
         if(ev.team===1)c1++;else c2++;sc.textContent=`${c1} - ${c2}`;
         div.innerHTML=`<span class="ev-min">${ev.m}'</span><span class="ev-icon">⚽</span><span>${flag(ev.team===1?m.t1:m.t2)} <strong>${ev.sc}</strong>${ev.as?` <span style="color:var(--text-muted);font-size:.7rem">(🅰️${ev.as})</span>`:""}</span>`;
+      } else if (ev.type==="red") {
+        div.innerHTML=`<span class="ev-min">${ev.m}'</span><span class="ev-icon">🟥</span><span style="color:var(--red)">${flag(ev.team===1?m.t1:m.t2)} ${ev.pl}</span>`;
       } else {
         div.innerHTML=`<span class="ev-min">${ev.m}'</span><span class="ev-icon">🟨</span><span style="color:var(--text-muted)">${flag(ev.team===1?m.t1:m.t2)} ${ev.pl}</span>`;
       }
+      
       ec.appendChild(div);ec.scrollTop=ec.scrollHeight;setTimeout(next,delay);
     }
     setTimeout(next,150);
@@ -782,18 +826,29 @@ async function handleChoice(outcome){
   document.querySelectorAll(".choice-btn").forEach(b=>{b.disabled=true;b.style.opacity=".5"});
   const selClass=outcome==="win1"?"win1":outcome==="draw"?"draw":"win2";
   document.querySelector(`.choice-btn.${selClass}`)?.classList.add("selected");
+  
   const[s1,s2]=genScore(m.t1,m.t2,outcome);
-  const evs=genEvents(m.t1,m.t2,s1,s2);
+  const evs=genEvents(m.t1,m.t2,s1,s2, 90); // Grup maçları maksimum 90 dakika
+  
   await animateSim(m,evs,s1,s2);
   let yc1=0,yc2=0;evs.forEach(e=>{if(e.type==="yellow"){if(e.team===1)yc1++;else yc2++;}});
   groupResults[m.id]={t1:m.t1,t2:m.t2,s1,s2,yc1,yc2};
   applyResult(m.t1,m.t2,s1,s2,yc1,yc2);
-  updateStatsFromEvs(evs); renderStats(); set(ref(db,`${FBP()}/playerStats`), playerStats);
   
+  // Arayüzü direkt güncelle (Firebase'den bağımsız, kilitlenmemesi için)
   const mc=document.getElementById("match-card");mc.classList.add("done");mc.classList.remove("pulsing");
   document.getElementById("next-match-btn").style.display="block";
-  await set(ref(db,`${FBP()}/groupResults/${m.id}`),{t1:m.t1,t2:m.t2,s1,s2,yc1,yc2});
-  await set(ref(db,`${FBP()}/progress`),currentMatchIdx+1);
+
+  try {
+    updateStatsFromEvs(evs); 
+    renderStats(); 
+    // Güvenli try-catch bloğu. İnternet kopsa bile uygulama devam eder.
+    await set(ref(db,`${FBP()}/playerStats`), playerStats);
+    await set(ref(db,`${FBP()}/groupResults/${m.id}`),{t1:m.t1,t2:m.t2,s1,s2,yc1,yc2});
+    await set(ref(db,`${FBP()}/progress`),currentMatchIdx+1);
+  } catch (error) {
+    console.error("Firebase kayıt hatası. İlerlemeye devam ediliyor.", error);
+  }
 }
 document.getElementById("choice-win1").addEventListener("click",()=>handleChoice("win1"));
 document.getElementById("choice-draw").addEventListener("click",()=>handleChoice("draw"));
@@ -962,7 +1017,7 @@ async function handleKOChoice(m,outcome,card,btn){
   btn.classList.add("selected");
   
   const [s1,s2]=genKOScore(m.t1,m.t2,outcome);
-  const evs=genEvents(m.t1,m.t2,s1,s2);
+  const evs=genEvents(m.t1,m.t2,s1,s2, 120); // Eleme maçları uzatmaya gidebileceği için max 120
   let pens = null;
   let winner = s1 > s2 ? m.t1 : (s2 > s1 ? m.t2 : null);
 
@@ -1005,9 +1060,14 @@ async function handleKOChoice(m,outcome,card,btn){
   const wd=document.createElement("div");wd.className="ko-winner-tag";wd.textContent=`🏅 ${flag(winner)} ${winner} geçti ${pens?`(Pen: ${pens.p1}-${pens.p2})`:""}`;
   card.appendChild(wd);
   
-  updateStatsFromEvs(evs); renderStats(); set(ref(db,`${FBP()}/playerStats`), playerStats);
-  await set(ref(db,`${FBP()}/koResults/${currentKORound}/${m.id}`),{s1,s2,winner,pens});
-  
+  try {
+    updateStatsFromEvs(evs); renderStats(); 
+    await set(ref(db,`${FBP()}/playerStats`), playerStats);
+    await set(ref(db,`${FBP()}/koResults/${currentKORound}/${m.id}`),{s1,s2,winner,pens});
+  } catch(err) {
+    console.error("Firebase kayıt hatası.", err);
+  }
+
   const allDone=koState[currentKORound].every(mx=>koState[`${currentKORound}results`]?.[mx.id]);
   if(allDone){
     const nb=document.getElementById("ko-next-btn");nb.style.display="block";
@@ -1093,7 +1153,6 @@ function buildCard(data,uname,ucol){
 
 function localData(){
   return{
-    // DİKKAT: Burada hata sebebi olan eksiklik giderildi. (final: koState.finalresults yapıldı)
     koResults:{final:koState.finalresults,sf:koState.sfresults,qf:koState.qfresults,r16:koState.r16results,third:koState.thirdresults},
     knockoutState:koState,thirdPlaceAdvancers
   };
@@ -1198,7 +1257,6 @@ async function loadAndInit(){
           if(data.knockoutState?.[currentKORound]) koState[currentKORound]=data.knockoutState[currentKORound];
         }
         
-        // Turnuva bittiyse sayfayı yenilediğinde puan durumuna değil doğrudan Sonuçlar sayfasına yönlendir.
         if (isDone) {
           switchTab("results");
         } else {
