@@ -22,6 +22,21 @@ html{scroll-behavior:smooth}
 body{font-family:"Poppins",sans-serif;background:var(--navy);min-height:100vh;color:var(--text);overflow-x:hidden}
 body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellipse at 20% 50%,rgba(30,60,120,.4) 0%,transparent 60%),radial-gradient(ellipse at 80% 20%,rgba(20,50,100,.3) 0%,transparent 50%),radial-gradient(ellipse at 60% 80%,rgba(15,40,90,.3) 0%,transparent 50%);pointer-events:none;z-index:0}
 
+/* ── LAYOUT & SIDEBAR ── */
+.layout-wrapper { display: flex; max-width: 1400px; margin: 0 auto; align-items: flex-start; }
+.main-content { flex: 1; min-width: 0; }
+.sidebar { width: 340px; background: rgba(255,255,255,0.02); border-left: 1px solid rgba(255,255,255,0.08); padding: 24px; position: sticky; top: 64px; height: calc(100vh - 64px); overflow-y: auto; display: flex; flex-direction: column; gap: 24px; backdrop-filter: blur(10px); }
+.sidebar::-webkit-scrollbar { width: 6px; }
+.sidebar::-webkit-scrollbar-thumb { background: rgba(240,180,41,.3); border-radius: 4px; }
+.sidebar-title { font-family: "Bebas Neue", sans-serif; font-size: 1.6rem; letter-spacing: 2px; color: var(--gold); text-align: center; }
+.stat-box { background: rgba(0,0,0,0.25); border-radius: 16px; border: 1px solid rgba(255,255,255,0.06); padding: 18px; }
+.stat-box-title { font-size: .8rem; font-weight: 700; color: var(--text-muted); margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+.stat-item { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px dashed rgba(255,255,255,0.05); font-size: .85rem; transition: .2s; }
+.stat-item:hover { background: rgba(255,255,255,0.03); padding-left: 6px; padding-right: 6px; border-radius: 6px; }
+.stat-item:last-child { border-bottom: none; }
+.stat-player { display: flex; align-items: center; gap: 8px; }
+.stat-val { font-weight: 800; font-size: 1rem; color: var(--gold); background: rgba(240,180,41,.1); padding: 2px 10px; border-radius: 12px; }
+
 /* ── AUTH OVERLAY ── */
 #auth-overlay{display:flex;position:fixed;inset:0;background:linear-gradient(135deg,#0a1628 0%,#0d1b3e 50%,#0a1225 100%);z-index:99999;align-items:center;justify-content:center;flex-direction:column;gap:28px}
 .auth-title{font-family:"Bebas Neue",sans-serif;font-size:clamp(2rem,8vw,4rem);letter-spacing:4px;color:var(--gold);text-align:center}
@@ -75,10 +90,22 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 .sim-scoreboard{background:linear-gradient(135deg,rgba(13,27,62,.9),rgba(18,36,79,.9));padding:20px;text-align:center;border-bottom:1px solid rgba(255,255,255,.08)}
 .sim-score{font-family:"Bebas Neue",sans-serif;font-size:3.5rem;color:#fff;letter-spacing:4px;line-height:1}
 .sim-teams-row{display:flex;justify-content:space-between;align-items:center;font-size:.8rem;color:var(--text-muted);margin-top:4px}
-.sim-events{padding:12px 16px;max-height:160px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
+.sim-events{padding:12px 16px;max-height:200px;overflow-y:auto;display:flex;flex-direction:column;gap:4px}
 .sim-event{font-size:.78rem;padding:4px 8px;border-radius:6px;background:rgba(255,255,255,.04);display:flex;align-items:center;gap:8px;animation:slideInEv .25s ease}
 @keyframes slideInEv{from{opacity:0;transform:translateX(-10px)}to{opacity:1;transform:none}}
 .sim-event .ev-min{color:var(--gold);font-weight:700;min-width:36px}
+
+/* ── PENALTIES ── */
+.pen-row { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; background: rgba(0,0,0,0.4); padding: 16px; border-radius: 12px; border: 1px solid rgba(255,255,255,.05); animation: slideInEv 0.4s ease; }
+.pen-dots { display: flex; gap: 6px; flex-wrap: wrap; width: 40%; justify-content: center;}
+.pen-dots.left { justify-content: flex-end; }
+.pen-dots.right { justify-content: flex-start; }
+.pen-dot { width: 14px; height: 14px; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 14px; transition: transform .3s; }
+.pen-dot.goal { background: var(--green); border-radius: 50%; box-shadow: 0 0 8px rgba(34,197,94,.4); }
+.pen-dot.miss { color: var(--red); text-shadow: 0 0 6px rgba(239,68,68,.5); font-family: sans-serif; line-height: 1;}
+.pen-dot.miss::before { content: "✖"; }
+.pen-score-mid { font-family: "Bebas Neue", sans-serif; font-size: 2rem; color: var(--text); white-space: nowrap; }
+
 .next-match-btn{width:100%;margin-top:16px;padding:14px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#0d1b3e;border:none;border-radius:14px;font-family:"Poppins",sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:.2s;display:none}
 .next-match-btn:hover{transform:scale(1.02)}
 @keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(240,180,41,.4)}50%{box-shadow:0 0 0 8px rgba(240,180,41,0)}}
@@ -119,8 +146,10 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 .ko-vs-sep{font-family:"Bebas Neue",sans-serif;font-size:1.5rem;color:var(--text-muted);flex-shrink:0;min-width:52px;text-align:center}
 .ko-vs-sep.result{color:var(--gold);font-size:1.8rem}
 .ko-choices{display:flex;gap:8px}
-.ko-choice-btn{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:var(--text);font-family:"Poppins",sans-serif;font-weight:600;font-size:.78rem;cursor:pointer;transition:.2s;text-align:center}
+.ko-choice-btn{flex:1;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.06);color:var(--text);font-family:"Poppins",sans-serif;font-weight:600;font-size:.78rem;cursor:pointer;transition:.2s;text-align:center; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .ko-choice-btn:hover{border-color:var(--gold);color:var(--gold);background:rgba(240,180,41,.1)}
+.ko-choice-btn.draw{background:rgba(245,158,11,.1);border-color:rgba(245,158,11,.3);}
+.ko-choice-btn.draw:hover{background:rgba(245,158,11,.2);border-color:var(--draw);color:#fcd34d}
 .ko-choice-btn.selected{background:rgba(240,180,41,.2);border-color:var(--gold);color:#fcd34d}
 .ko-winner-tag{text-align:center;font-size:.78rem;color:var(--gold);margin-top:8px;font-weight:700}
 .ko-next-btn{display:none;width:100%;max-width:300px;margin:24px auto 0;padding:14px;background:linear-gradient(135deg,var(--gold2),var(--gold));color:#0d1b3e;border:none;border-radius:14px;font-family:"Poppins",sans-serif;font-weight:700;font-size:.9rem;cursor:pointer;transition:.2s;text-align:center}
@@ -130,7 +159,7 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 .results-page{max-width:960px;margin:0 auto}
 .result-wrap{max-width:440px;margin:0 auto 40px}
 .result-card{background:linear-gradient(160deg,#0d1b3e 0%,#12244f 50%,#0a1630 100%);border:1px solid rgba(240,180,41,.25);border-radius:28px;padding:32px 24px;box-shadow:0 20px 60px rgba(0,0,0,.6);position:relative;overflow:hidden}
-.result-card::before{content:"absolute";position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(240,180,41,.08) 0%,transparent 70%);pointer-events:none}
+.result-card::before{content:"";position:absolute;top:-60px;right:-60px;width:200px;height:200px;border-radius:50%;background:radial-gradient(circle,rgba(240,180,41,.08) 0%,transparent 70%);pointer-events:none}
 .result-title{font-family:"Bebas Neue",sans-serif;font-size:2rem;letter-spacing:3px;color:var(--gold);text-align:center;margin-bottom:6px}
 .result-user{text-align:center;font-size:.78rem;color:var(--text-muted);margin-bottom:24px;display:flex;align-items:center;justify-content:center;gap:6px}
 .champion-card{background:linear-gradient(135deg,rgba(240,180,41,.2),rgba(212,148,42,.1));border:2px solid rgba(240,180,41,.5);border-radius:18px;padding:20px;display:flex;align-items:center;gap:16px;margin-bottom:12px}
@@ -165,50 +194,34 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
 .friends-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:24px}
 .friend-card-wrap{opacity:.92}
 
-/* ── TOAST ── */
+/* ── TOAST & LOADING ── */
 #wc-toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;pointer-events:none;display:flex;flex-direction:column;gap:6px;align-items:center}
 .wc-toast-item{background:rgba(13,27,62,.95);color:#fff;padding:10px 22px;border-radius:22px;font-size:.82rem;backdrop-filter:blur(12px);border:1px solid rgba(255,255,255,.12);box-shadow:0 4px 18px rgba(0,0,0,.35);animation:toastIn .3s ease;text-align:center;white-space:nowrap}
 @keyframes toastIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
-
-/* ── LOADING ── */
 #wc-loading{display:none;position:fixed;inset:0;background:rgba(13,27,62,.96);z-index:9000;align-items:center;justify-content:center;flex-direction:column;gap:16px}
 #wc-loading.on{display:flex}
 .wc-spinner{width:48px;height:48px;border:4px solid rgba(240,180,41,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .8s linear infinite}
 @keyframes spin{to{transform:rotate(360deg)}}
 
 /* ── REFERANS LİNKİ ── */
-.credit-link {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: rgba(255, 255, 255, 0.4);
-  text-decoration: none;
-  font-size: 0.85rem;
-  transition: 0.2s;
-  font-family: "Poppins", sans-serif;
-  letter-spacing: 1px;
-}
-.credit-link:hover {
-  color: var(--gold);
-  transform: translateY(-2px);
-}
-.auth-credit {
-  position: absolute;
-  bottom: 24px;
-}
-.results-credit {
-  justify-content: center;
-  margin-top: 50px;
-  margin-bottom: 20px;
-}
+.credit-link { display: flex; align-items: center; gap: 6px; color: rgba(255, 255, 255, 0.4); text-decoration: none; font-size: 0.85rem; transition: 0.2s; font-family: "Poppins", sans-serif; letter-spacing: 1px; }
+.credit-link:hover { color: var(--gold); transform: translateY(-2px); }
+.auth-credit { position: absolute; bottom: 24px; }
+.results-credit { justify-content: center; margin-top: 50px; margin-bottom: 20px; }
 
 /* ── RESPONSIVE ── */
+@media(max-width:850px){
+  .layout-wrapper { flex-direction: column; }
+  .sidebar { width: 100%; height: auto; position: static; border-left: none; border-top: 1px solid rgba(255,255,255,0.08); padding: 24px 16px; }
+}
 @media(max-width:600px){
   .header-title{font-size:1.1rem}.tab-btn{padding:5px 9px;font-size:.68rem}
   .match-teams{gap:10px}.team-flag{font-size:2.2rem}.team-name{font-size:.85rem}
   .result-card{padding:20px 14px}.champion-name{font-size:1.5rem}
   .gs-title{font-size:1.7rem}.share-btns{flex-direction:column}
   .friends-grid{grid-template-columns:1fr}
+  .pen-dots { width: 35%; }
+  .ko-choice-btn { font-size: .7rem; padding: 10px 4px; }
 }
 </style>
 </head>
@@ -246,82 +259,107 @@ body::before{content:"";position:fixed;inset:0;background:radial-gradient(ellips
   </div>
 </header>
 
-<!-- ── GROUP STAGE ── -->
-<div class="page active" id="page-group-stage">
-  <div class="gs-title">GRUP AŞAMASI</div>
-  <div class="gs-subtitle">Her maç için sonucu tahmin et</div>
-  <div class="progress-wrap">
-    <div class="progress-label"><span id="match-progress-txt">Maç 1 / 72</span><span id="match-group-txt">Grup A</span></div>
-    <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
-  </div>
-  <div class="match-card pulsing" id="match-card">
-    <div class="match-group-tag" id="match-group-tag">GRUP A · MAÇ 1</div>
-    <div class="match-info-txt" id="match-info-txt"></div>
-    <div class="match-teams">
-      <div class="match-team"><div class="team-flag" id="team1-flag">🇲🇽</div><div class="team-name" id="team1-name">Mexico</div></div>
-      <div class="match-vs">VS</div>
-      <div class="match-team"><div class="team-flag" id="team2-flag">🇿🇦</div><div class="team-name" id="team2-name">South Africa</div></div>
-    </div>
-    <div class="choices">
-      <button class="choice-btn win1" id="choice-win1">🟢 Mexico Kazanır</button>
-      <button class="choice-btn draw" id="choice-draw">🟡 Berabere</button>
-      <button class="choice-btn win2" id="choice-win2">🔴 South Africa Kazanır</button>
-    </div>
-    <div class="sim-box" id="sim-box">
-      <div class="sim-scoreboard">
-        <div class="sim-score" id="sim-score">0 - 0</div>
-        <div class="sim-teams-row"><span id="sim-t1">Mexico</span><span style="font-size:.65rem;letter-spacing:2px;color:var(--gold)">MAÇ SONU</span><span id="sim-t2">South Africa</span></div>
+<div class="layout-wrapper">
+  
+  <div class="main-content">
+    <!-- ── GROUP STAGE ── -->
+    <div class="page active" id="page-group-stage">
+      <div class="gs-title">GRUP AŞAMASI</div>
+      <div class="gs-subtitle">Her maç için sonucu tahmin et</div>
+      <div class="progress-wrap">
+        <div class="progress-label"><span id="match-progress-txt">Maç 1 / 72</span><span id="match-group-txt">Grup A</span></div>
+        <div class="progress-bar"><div class="progress-fill" id="progress-fill" style="width:0%"></div></div>
       </div>
-      <div class="sim-events" id="sim-events"></div>
-    </div>
-    <button class="next-match-btn" id="next-match-btn">Sonraki Maç ▶</button>
-  </div>
-</div>
-
-<!-- ── STANDINGS ── -->
-<div class="page" id="page-standings">
-  <div class="standings-page">
-    <div class="gs-title">PUAN DURUMU</div>
-    <div class="gs-subtitle">Grup aşaması sonuçları</div>
-    <div class="group-standings-grid" id="standings-grid"></div>
-  </div>
-</div>
-
-<!-- ── KNOCKOUT ── -->
-<div class="page" id="page-knockout">
-  <div class="bracket-page">
-    <div class="round-title" id="ko-round-title">SON 32</div>
-    <div class="round-subtitle" id="ko-round-subtitle"></div>
-    <div class="ko-matches-grid" id="ko-matches-grid"></div>
-    <button class="ko-next-btn" id="ko-next-btn">Sonraki Tur ▶</button>
-  </div>
-</div>
-
-<!-- ── RESULTS ── -->
-<div class="page" id="page-results">
-  <div class="results-page">
-    <div class="result-wrap" id="my-result-wrap"></div>
-    <div class="share-wrap" id="share-section" style="display:none">
-      <div class="share-title">🔗 Tahminini Paylaş</div>
-      <div class="share-btns">
-        <button class="share-btn whatsapp" id="share-wa">💬 WhatsApp</button>
-        <a class="share-btn twitter" id="share-tw" href="#" target="_blank">🐦 Twitter / X</a>
-        <button class="share-btn instagram" id="share-ig">📸 Instagram</button>
-        <button class="share-btn copy" id="share-copy">🔗 Linki Kopyala</button>
+      <div class="match-card pulsing" id="match-card">
+        <div class="match-group-tag" id="match-group-tag">GRUP A · MAÇ 1</div>
+        <div class="match-info-txt" id="match-info-txt"></div>
+        <div class="match-teams">
+          <div class="match-team"><div class="team-flag" id="team1-flag">🇲🇽</div><div class="team-name" id="team1-name">Mexico</div></div>
+          <div class="match-vs">VS</div>
+          <div class="match-team"><div class="team-flag" id="team2-flag">🇿🇦</div><div class="team-name" id="team2-name">South Africa</div></div>
+        </div>
+        <div class="choices">
+          <button class="choice-btn win1" id="choice-win1">🟢 Mexico Kazanır</button>
+          <button class="choice-btn draw" id="choice-draw">🟡 Berabere</button>
+          <button class="choice-btn win2" id="choice-win2">🔴 South Africa Kazanır</button>
+        </div>
+        <div class="sim-box" id="sim-box">
+          <div class="sim-scoreboard">
+            <div class="sim-score" id="sim-score">0 - 0</div>
+            <div class="sim-teams-row"><span id="sim-t1">Mexico</span><span style="font-size:.65rem;letter-spacing:2px;color:var(--gold)">MAÇ SONU</span><span id="sim-t2">South Africa</span></div>
+          </div>
+          <div class="sim-events" id="sim-events"></div>
+        </div>
+        <button class="next-match-btn" id="next-match-btn">Sonraki Maç ▶</button>
       </div>
     </div>
-    <div class="friends-section">
-      <div class="friends-title">ARKADAŞLARIN TAHMİNLERİ</div>
-      <div class="friends-grid" id="friends-grid"></div>
+
+    <!-- ── STANDINGS ── -->
+    <div class="page" id="page-standings">
+      <div class="standings-page">
+        <div class="gs-title">PUAN DURUMU</div>
+        <div class="gs-subtitle">Grup aşaması sonuçları</div>
+        <div class="group-standings-grid" id="standings-grid"></div>
+      </div>
     </div>
 
-    <!-- Sonuç Sayfası Referans Linki -->
-    <a href="https://x.com/rucht_" target="_blank" class="credit-link results-credit">
-      <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 5.918H5.078z"/></svg>
-      Rucht
-    </a>
-  </div>
-</div>
+    <!-- ── KNOCKOUT ── -->
+    <div class="page" id="page-knockout">
+      <div class="bracket-page">
+        <div class="round-title" id="ko-round-title">SON 32</div>
+        <div class="round-subtitle" id="ko-round-subtitle"></div>
+        <div class="ko-matches-grid" id="ko-matches-grid"></div>
+        <button class="ko-next-btn" id="ko-next-btn">Sonraki Tur ▶</button>
+      </div>
+    </div>
+
+    <!-- ── RESULTS ── -->
+    <div class="page" id="page-results">
+      <div class="results-page">
+        <div class="result-wrap" id="my-result-wrap"></div>
+        <div class="share-wrap" id="share-section" style="display:none">
+          <div class="share-title">🔗 Tahminini Paylaş</div>
+          <div class="share-btns">
+            <button class="share-btn whatsapp" id="share-wa">💬 WhatsApp</button>
+            <a class="share-btn twitter" id="share-tw" href="#" target="_blank">🐦 Twitter / X</a>
+            <button class="share-btn instagram" id="share-ig">📸 Instagram</button>
+            <button class="share-btn copy" id="share-copy">🔗 Linki Kopyala</button>
+          </div>
+        </div>
+        <div class="friends-section">
+          <div class="friends-title">ARKADAŞLARIN TAHMİNLERİ</div>
+          <div class="friends-grid" id="friends-grid"></div>
+        </div>
+
+        <!-- Sonuç Sayfası Referans Linki -->
+        <a href="https://x.com/rucht_" target="_blank" class="credit-link results-credit">
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.008 5.918H5.078z"/></svg>
+          Rucht
+        </a>
+      </div>
+    </div>
+  </div> <!-- main-content bitişi -->
+
+  <!-- ── SIDEBAR (STATS) ── -->
+  <aside class="sidebar" id="stats-sidebar">
+    <div class="sidebar-title">📊 TURNUVA İSTATİSTİKLERİ</div>
+    
+    <div class="stat-box">
+      <div class="stat-box-title">👟 GOL KRALLIĞI</div>
+      <div id="top-scorers-list">
+        <div style="opacity:.5;font-size:.8rem;text-align:center;padding:10px">Henüz maç oynanmadı</div>
+      </div>
+    </div>
+
+    <div class="stat-box">
+      <div class="stat-box-title">🤝 ASİST KRALLIĞI</div>
+      <div id="top-assists-list">
+        <div style="opacity:.5;font-size:.8rem;text-align:center;padding:10px">Henüz maç oynanmadı</div>
+      </div>
+    </div>
+  </aside>
+
+</div> <!-- layout-wrapper bitişi -->
 
 <script type="module">
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.0/firebase-app.js";
@@ -338,7 +376,20 @@ const SITE_URL = "https://rucht.github.io/wc2026/";
 const COLORS=["#e74c3c","#e67e22","#2ecc71","#9b59b6","#f1c40f","#3498db","#8d6e63","#1abc9c","#e91e63","#ff5722"];
 function autoColor(n){return COLORS[Math.abs([...n].reduce((a,c)=>a+c.charCodeAt(0),0))%COLORS.length]}
 
-// ── TEAM DATA ────────────────────────────────────────────────────────────────
+// ── TEAM DATA & POWER RANKINGS ────────────────────────────────────────────────
+const TEAM_RANKS = {
+  "France":1, "Spain":2, "Argentina":3, "England":4, "Portugal":5,
+  "Brazil":6, "Netherlands":7, "Morocco":8, "Belgium":9, "Germany":10,
+  "Croatia":11, "Colombia":12, "Senegal":13, "Mexico":14, "USA":15,
+  "Uruguay":16, "Japan":17, "Switzerland":18, "Iran":19, "South Korea":20,
+  "Ecuador":21, "Austria":22, "Türkiye":23, "Australia":24, "Algeria":25,
+  "Canada":26, "Egypt":27, "Norway":28, "Panama":29, "Ivory Coast":30,
+  "Scotland":31, "Paraguay":32, "Sweden":33, "Czechia":34, "Tunisia":35,
+  "DR Congo":36, "Uzbekistan":37, "Qatar":38, "Iraq":39, "South Africa":40,
+  "Saudi Arabia":41, "Jordan":42, "Bosnia & Herzegovina":43, "Cape Verde":44,
+  "Ghana":45, "Curaçao":46, "Haiti":47, "New Zealand":48
+};
+
 const TEAMS={
   "Mexico":{flag:"🇲🇽",players:["Edson Álvarez","Hirving Lozano","Santiago Giménez","Julián Quiñones","Luis Chávez","Johan Vásquez","César Montes","Orbelín Pineda","Roberto Alvarado","Raúl Jiménez"]},
   "South Africa":{flag:"🇿🇦",players:["Percy Tau","Themba Zwane","Teboho Mokoena","Khuliso Mudau","Aubrey Modiba","Mothobi Mvala","Evidence Makgopa","Sphephelo Sithole","Mihlali Mayambela","Lyle Foster"]},
@@ -480,7 +531,6 @@ const GROUP_MATCHES=[
   {id:"g_72",group:"K",t1:"DR Congo",t2:"Uzbekistan",date:"27 Haz 2026",stadium:"Mercedes-Benz Stadium, Atlanta"}
 ];
 
-// ── KO BRACKET LOGIC & FIXTURES ──────────────────────────────────────────────
 const KO_BRACKET = {
   r16: [
     {id:"m89", t1_source:"m74", t2_source:"m77"},
@@ -510,9 +560,12 @@ let currentMatchIdx=0;
 let groupResults={};
 let standings={};
 let thirdPlaceAdvancers=[];
+let playerStats={};
+
+// DİKKAT: Buradaki "thirdresults" ve "finalresults" isimleri hatayı çözen asıl düzeltme noktası.
 let koState={
   r32:[],r16:[],qf:[],sf:[],third:[],final:[],
-  r32results:{},r16results:{},qfresults:{},sfresults:{},thirdresult:{},finalresult:{}
+  r32results:{},r16results:{},qfresults:{},sfresults:{},thirdresults:{},finalresults:{}
 };
 let currentKORound="r32";
 const FBP=()=>`worldcup2026/${curUser}`;
@@ -538,7 +591,6 @@ document.getElementById("user-pill").addEventListener("click",()=>{
   curUser=null;localStorage.removeItem("wcUser");authEl.style.display="flex";
 });
 
-// Check existing session
 const savedUser=localStorage.getItem("wcUser");
 if(savedUser){login(savedUser);}
 
@@ -571,33 +623,102 @@ function wPick(arr){
   for(let i=0;i<arr.length;i++){if(r<w[i]) return arr[i];r-=w[i];}
   return arr[arr.length-1];
 }
-function strength(t){
-  const A=["Brazil","France","Argentina","England","Spain","Germany","Portugal","Netherlands","Belgium","Uruguay","Croatia"];
-  const B=["South Korea","Czechia","Canada","Switzerland","Australia","Türkiye","Ivory Coast","Sweden","Norway","Algeria","Austria","Ghana","Egypt","Tunisia","Scotland","Saudi Arabia","Qatar","Colombia","Morocco","Japan","USA","Mexico","Ecuador","Senegal"];
-  return A.includes(t)?3:B.includes(t)?2:1;
+
+// ── SCORE & EVENTS GEN (YENİ POWER RANKING SİSTEMİ) ────────────────────────
+function getRank(t) { return TEAM_RANKS[t] || 24; }
+
+function generateRealisticScore(t1, t2, outcome) {
+  const r1 = getRank(t1);
+  const r2 = getRank(t2);
+  let diff = r2 - r1; // pozitifse t1 (Team 1) daha güçlü demektir.
+
+  if (outcome === "draw") {
+    // Beraberlik durumu: Arada inanılmaz güç farkı varsa (Uçurum) güçsüz takım otobüs çekmiştir, az gollü (0-0, 1-1) biter.
+    // Denk takımlarsa (2-2) ihtimali de dahil edilir.
+    const isMismatch = Math.abs(diff) > 20;
+    const g = rng(0, isMismatch ? 1 : 2);
+    return [g, g];
+  }
+
+  const t1Wins = outcome === "win1";
+  const rankDiff = t1Wins ? (r2 - r1) : (r1 - r2); // Kazanan takımın lehine olan güç farkı
+
+  let wGoals = 1, lGoals = 0;
+
+  if (rankDiff > 25) {
+    // 1. Ağır Favori Rahat Kazanıyor (Çok gollü, fark)
+    wGoals = rng(3, 6);
+    lGoals = rng(0, 1);
+  } else if (rankDiff > 12) {
+    // 2. Net Favori Kazanıyor (Rahat galibiyet ama abartılı değil)
+    wGoals = rng(2, 4);
+    lGoals = rng(0, wGoals - 1);
+    if(lGoals === wGoals) lGoals--;
+  } else if (rankDiff >= -12) {
+    // 3. Denk Takımlar veya Hafif Sürpriz (Kıyasıya rekabet, yakın skor)
+    wGoals = rng(1, 3);
+    lGoals = wGoals - rng(1, 2);
+    if (lGoals < 0) lGoals = 0;
+  } else {
+    // 4. BÜYÜK SÜPRİZ! Underdog yendi. (Maç ucu ucuna bitmeli, fark olamaz)
+    wGoals = rng(1, 2);
+    lGoals = wGoals - 1;
+  }
+
+  return t1Wins ? [wGoals, lGoals] : [lGoals, wGoals];
 }
 
-// ── SCORE GEN ─────────────────────────────────────────────────────────────────
-function genScore(t1,t2,outcome){
-  const s1=strength(t1),s2=strength(t2);
-  if(outcome==="draw"){const x=rng(0,2);return[x,x];}
-  if(outcome==="win1"){let g1=rng(1,s1>=3?4:3),g2=rng(0,g1-1);if(g1===g2)g2=Math.max(0,g2-1);return[g1,g2];}
-  let g2=rng(1,s2>=3?4:3),g1=rng(0,g2-1);if(g1===g2)g1=Math.max(0,g1-1);return[g1,g2];
-}
-function genKOScore(t1,t2,outcome){
-  const s1=strength(t1),s2=strength(t2);
-  if(outcome==="win1"){const g1=rng(1,s1>=3?3:2),g2=rng(0,g1-1);return[g1,g2];}
-  const g2=rng(1,s2>=3?3:2),g1=rng(0,g2-1);return[g1,g2];
-}
+const genScore = generateRealisticScore;
+const genKOScore = generateRealisticScore;
+
 function genEvents(t1,t2,s1,s2){
   const ev=[];const p1=TEAMS[t1]?.players||["Player"];const p2=TEAMS[t2]?.players||["Player"];
   const used=new Set();
   const uMin=(a,b)=>{let m;do{m=rng(a,b)}while(used.has(m));used.add(m);return m};
-  for(let i=0;i<s1;i++){const m=uMin(1,90);const sc=wPick(p1);const as=Math.random()>.5?pick(p1.filter(x=>x!==sc)):null;ev.push({m,team:1,sc,as,type:"goal"});}
-  for(let i=0;i<s2;i++){const m=uMin(1,90);const sc=wPick(p2);const as=Math.random()>.5?pick(p2.filter(x=>x!==sc)):null;ev.push({m,team:2,sc,as,type:"goal"});}
+  for(let i=0;i<s1;i++){const m=uMin(1,120);const sc=wPick(p1);const as=Math.random()>.5?pick(p1.filter(x=>x!==sc)):null;ev.push({m,team:1,teamName:t1,sc,as,type:"goal"});}
+  for(let i=0;i<s2;i++){const m=uMin(1,120);const sc=wPick(p2);const as=Math.random()>.5?pick(p2.filter(x=>x!==sc)):null;ev.push({m,team:2,teamName:t2,sc,as,type:"goal"});}
   const yc=rng(1,4);
-  for(let i=0;i<yc;i++){const m=uMin(10,89);const t=Math.random()>.5?1:2;const pl=wPick(t===1?p1:p2);ev.push({m,team:t,pl,type:"yellow"});}
+  for(let i=0;i<yc;i++){const m=uMin(10,119);const t=Math.random()>.5?1:2;const pl=wPick(t===1?p1:p2);ev.push({m,team:t,pl,type:"yellow"});}
   return ev.sort((a,b)=>a.m-b.m);
+}
+
+function simulatePenalties() {
+  let p1=0, p2=0; let h1=[], h2=[];
+  for(let i=0; i<5; i++){
+    let g1 = Math.random() < 0.75; h1.push(g1); if(g1) p1++;
+    let g2 = Math.random() < 0.75; h2.push(g2); if(g2) p2++;
+  }
+  while(p1 === p2) {
+    let g1 = Math.random() < 0.75; h1.push(g1); if(g1) p1++;
+    let g2 = Math.random() < 0.75; h2.push(g2); if(g2) p2++;
+  }
+  return {p1, p2, h1, h2};
+}
+
+// ── PLAYER STATS LOGIC ────────────────────────────────────────────────────────
+function updateStatsFromEvs(evs) {
+  evs.forEach(e => {
+    if(e.type === "goal") {
+      if(!playerStats[e.sc]) playerStats[e.sc] = { goals: 0, assists: 0, teamName: e.teamName };
+      playerStats[e.sc].goals++;
+      if(e.as) {
+        if(!playerStats[e.as]) playerStats[e.as] = { goals: 0, assists: 0, teamName: e.teamName };
+        playerStats[e.as].assists++;
+      }
+    }
+  });
+}
+
+function renderStats() {
+  const arr = Object.keys(playerStats).map(p => ({name: p, ...playerStats[p]}));
+  const topScorers = [...arr].filter(p => p.goals > 0).sort((a,b) => b.goals - a.goals || b.assists - a.assists).slice(0, 7);
+  const topAssists = [...arr].filter(p => p.assists > 0).sort((a,b) => b.assists - a.assists || b.goals - a.goals).slice(0, 7);
+
+  const gs = document.getElementById("top-scorers-list");
+  gs.innerHTML = topScorers.length ? topScorers.map(p => `<div class="stat-item"><div class="stat-player"><span style="font-size:1.2rem">${flag(p.teamName)}</span> <span>${p.name}</span></div><div class="stat-val">${p.goals}</div></div>`).join("") : `<div style="opacity:.5;font-size:.8rem;text-align:center;padding:10px">Henüz gol yok</div>`;
+
+  const as = document.getElementById("top-assists-list");
+  as.innerHTML = topAssists.length ? topAssists.map(p => `<div class="stat-item"><div class="stat-player"><span style="font-size:1.2rem">${flag(p.teamName)}</span> <span>${p.name}</span></div><div class="stat-val">${p.assists}</div></div>`).join("") : `<div style="opacity:.5;font-size:.8rem;text-align:center;padding:10px">Henüz asist yok</div>`;
 }
 
 // ── MATCH CARD ────────────────────────────────────────────────────────────────
@@ -667,6 +788,8 @@ async function handleChoice(outcome){
   let yc1=0,yc2=0;evs.forEach(e=>{if(e.type==="yellow"){if(e.team===1)yc1++;else yc2++;}});
   groupResults[m.id]={t1:m.t1,t2:m.t2,s1,s2,yc1,yc2};
   applyResult(m.t1,m.t2,s1,s2,yc1,yc2);
+  updateStatsFromEvs(evs); renderStats(); set(ref(db,`${FBP()}/playerStats`), playerStats);
+  
   const mc=document.getElementById("match-card");mc.classList.add("done");mc.classList.remove("pulsing");
   document.getElementById("next-match-btn").style.display="block";
   await set(ref(db,`${FBP()}/groupResults/${m.id}`),{t1:m.t1,t2:m.t2,s1,s2,yc1,yc2});
@@ -747,7 +870,6 @@ function getThird(allowedGroupsList, usedSet) {
       return tName;
     }
   }
-  // Kısıtlar uymazsa boşta kalan en yüksek puanlı üçüncü
   for (const tName of thirdPlaceAdvancers) {
     if (!usedSet.has(tName)) {
       usedSet.add(tName);
@@ -811,16 +933,17 @@ function renderKOPage(){
         <div class="ko-vs-sep${res?" result":""}">${scoreLabel}</div>
         <div class="ko-team right"><span class="ko-name">${m.t2||"TBD"}</span><span class="ko-flag">${flag(m.t2)}</span></div>
       </div>`;
+    
     if(!res&&m.t1&&m.t2&&m.t1!=="TBD"&&m.t2!=="TBD"){
       const ch=document.createElement("div");ch.className="ko-choices";
-      [["win1",`${m.t1} Kazanır`],["win2",`${m.t2} Kazanır`]].forEach(([out,lbl])=>{
-        const btn=document.createElement("button");btn.className="ko-choice-btn";btn.textContent=lbl;
+      [["win1",`🟢 ${m.t1}`],["draw","🟡 Penaltılara Gider"],["win2",`🔴 ${m.t2}`]].forEach(([out,lbl])=>{
+        const btn=document.createElement("button");btn.className=`ko-choice-btn ${out}`;btn.textContent=lbl;
         btn.addEventListener("click",()=>handleKOChoice(m,out,card,btn));ch.appendChild(btn);
       });
       card.appendChild(ch);
     } else if(res){
       const w=res.winner;
-      const wDiv=document.createElement("div");wDiv.className="ko-winner-tag";wDiv.textContent=`🏅 ${flag(w)} ${w} geçti`;
+      const wDiv=document.createElement("div");wDiv.className="ko-winner-tag";wDiv.textContent=`🏅 ${flag(w)} ${w} geçti ${res.pens?`(Pen: ${res.pens.p1}-${res.pens.p2})`:""}`;
       card.appendChild(wDiv);
     }
     grid.appendChild(card);
@@ -837,13 +960,24 @@ function renderKOPage(){
 async function handleKOChoice(m,outcome,card,btn){
   card.querySelectorAll(".ko-choice-btn").forEach(b=>{b.disabled=true;b.style.opacity=".5"});
   btn.classList.add("selected");
-  const[s1,s2]=genKOScore(m.t1,m.t2,outcome);
+  
+  const [s1,s2]=genKOScore(m.t1,m.t2,outcome);
   const evs=genEvents(m.t1,m.t2,s1,s2);
+  let pens = null;
+  let winner = s1 > s2 ? m.t1 : (s2 > s1 ? m.t2 : null);
+
+  if(outcome === "draw" || s1 === s2) {
+    pens = simulatePenalties();
+    winner = pens.p1 > pens.p2 ? m.t1 : m.t2;
+  }
+
   const sd=document.createElement("div");sd.className="sim-box";sd.style.cssText="display:block;margin-top:12px";
   sd.innerHTML=`<div class="sim-scoreboard"><div class="sim-score" id="ks-${m.id}">0 - 0</div><div class="sim-teams-row"><span>${m.t1}</span><span style="font-size:.6rem;letter-spacing:2px;color:var(--gold)">MAÇ SONU</span><span>${m.t2}</span></div></div><div class="sim-events" id="ke-${m.id}"></div>`;
   card.appendChild(sd);
+  
   const se=document.getElementById(`ks-${m.id}`),ec2=document.getElementById(`ke-${m.id}`);
   const delay=Math.min(2000/Math.max(evs.length,1),320);let c1=0,c2=0;
+  
   for(const ev of evs){
     await new Promise(r=>setTimeout(r,delay));
     if(ev.type==="goal"){
@@ -854,14 +988,26 @@ async function handleKOChoice(m,outcome,card,btn){
     }
   }
   se.textContent=`${s1} - ${s2}`;
-  const winner=s1>s2?m.t1:m.t2;
+
+  if(pens) {
+    const pr = document.createElement("div"); pr.className = "pen-row";
+    const d1 = pens.h1.map(x => x ? '<div class="pen-dot goal"></div>' : '<div class="pen-dot miss"></div>').join("");
+    const d2 = pens.h2.map(x => x ? '<div class="pen-dot goal"></div>' : '<div class="pen-dot miss"></div>').join("");
+    pr.innerHTML = `<div class="pen-dots left">${d1}</div> <div class="pen-score-mid">${pens.p1} - ${pens.p2}</div> <div class="pen-dots right">${d2}</div>`;
+    ec2.appendChild(pr);
+    ec2.scrollTop=ec2.scrollHeight;
+  }
+
   const rk=`${currentKORound}results`;
   if(!koState[rk]) koState[rk]={};
-  koState[rk][m.id]={s1,s2,winner};
+  koState[rk][m.id]={s1,s2,winner,pens};
   card.classList.add("done");
-  const wd=document.createElement("div");wd.className="ko-winner-tag";wd.textContent=`🏅 ${flag(winner)} ${winner} geçti`;
+  const wd=document.createElement("div");wd.className="ko-winner-tag";wd.textContent=`🏅 ${flag(winner)} ${winner} geçti ${pens?`(Pen: ${pens.p1}-${pens.p2})`:""}`;
   card.appendChild(wd);
-  await set(ref(db,`${FBP()}/koResults/${currentKORound}/${m.id}`),{s1,s2,winner});
+  
+  updateStatsFromEvs(evs); renderStats(); set(ref(db,`${FBP()}/playerStats`), playerStats);
+  await set(ref(db,`${FBP()}/koResults/${currentKORound}/${m.id}`),{s1,s2,winner,pens});
+  
   const allDone=koState[currentKORound].every(mx=>koState[`${currentKORound}results`]?.[mx.id]);
   if(allDone){
     const nb=document.getElementById("ko-next-btn");nb.style.display="block";
@@ -871,13 +1017,15 @@ async function handleKOChoice(m,outcome,card,btn){
 }
 
 document.getElementById("ko-next-btn").addEventListener("click",()=>{
-  if(currentKORound==="final"){switchTab("results");return;}
+  if(currentKORound==="final"){
+    switchTab("results");
+    return;
+  }
   
   const nextRounds = {r32:"r16", r16:"qf", qf:"sf", sf:"third", third:"final"};
   const next = nextRounds[currentKORound];
 
   if(currentKORound==="sf"){
-    // Yarı finalden sonra 3.lük maçı ve Final eşleşmelerini hazırla
     const r1 = koState.sfresults["m101"];
     const r2 = koState.sfresults["m102"];
     const m101_obj = koState.sf.find(x=>x.id==="m101");
@@ -890,12 +1038,11 @@ document.getElementById("ko-next-btn").addEventListener("click",()=>{
     koState.third = [{id: "m103", t1: l1, t2: l2}];
     koState.final = [{id: "m104", t1: w1, t2: w2}];
 
-    koState.thirdresult={}; koState.finalresult={};
+    koState.thirdresults={}; koState.finalresults={};
     set(ref(db,`${FBP()}/knockoutState/third`),koState.third);
     set(ref(db,`${FBP()}/knockoutState/final`),koState.final);
     
   } else if(currentKORound !== "third") {
-    // Normal ilerleyiş
     koState[next] = KO_BRACKET[next].map(m => {
       const r1 = koState[`${currentKORound}results`][m.t1_source];
       const r2 = koState[`${currentKORound}results`][m.t2_source];
@@ -946,7 +1093,8 @@ function buildCard(data,uname,ucol){
 
 function localData(){
   return{
-    koResults:{final:koState.finalresult,sf:koState.sfresults,qf:koState.qfresults,r16:koState.r16results,third:koState.thirdresult},
+    // DİKKAT: Burada hata sebebi olan eksiklik giderildi. (final: koState.finalresults yapıldı)
+    koResults:{final:koState.finalresults,sf:koState.sfresults,qf:koState.qfresults,r16:koState.r16results,third:koState.thirdresults},
     knockoutState:koState,thirdPlaceAdvancers
   };
 }
@@ -1004,10 +1152,10 @@ document.getElementById("restart-btn").addEventListener("click",async()=>{
 });
 
 function initFresh(){
-  currentMatchIdx=0;groupResults={};thirdPlaceAdvancers=[];
-  koState={r32:[],r16:[],qf:[],sf:[],third:[],final:[],r32results:{},r16results:{},qfresults:{},sfresults:{},thirdresult:{},finalresult:{}};
+  currentMatchIdx=0;groupResults={};thirdPlaceAdvancers=[];playerStats={};
+  koState={r32:[],r16:[],qf:[],sf:[],third:[],final:[],r32results:{},r16results:{},qfresults:{},sfresults:{},thirdresults:{},finalresults:{}};
   currentKORound="r32";
-  initStandings();renderMatchCard(0);switchTab("group-stage");
+  initStandings();renderStats();renderMatchCard(0);switchTab("group-stage");
 }
 
 // ── LOAD FROM FIREBASE ────────────────────────────────────────────────────────
@@ -1021,30 +1169,42 @@ async function loadAndInit(){
       groupResults=data.groupResults||{};
       Object.values(groupResults).forEach(r=>applyResult(r.t1,r.t2,r.s1,r.s2,r.yc1||0,r.yc2||0));
       thirdPlaceAdvancers=data.thirdPlaceAdvancers||[];
+      playerStats = data.playerStats || {};
+      renderStats();
+      
       currentMatchIdx=data.progress||0;
       if(data.knockoutState) Object.assign(koState,data.knockoutState);
       if(data.koResults){
         ["r32","r16","qf","sf","third","final"].forEach(round=>{
           if(data.koResults[round]){
-            const rk=round==="final"?"finalresult":round==="third"?"thirdresult":`${round}results`;
-            koState[rk]=data.koResults[round];
+            koState[`${round}results`]=data.koResults[round];
           }
         });
       }
+      
       if(currentMatchIdx>=GROUP_MATCHES.length||data.groupStageDone){
         currentMatchIdx=GROUP_MATCHES.length;
-        if(data.koResults?.final&&Object.keys(data.koResults.final).length) currentKORound="final";
-        else if(data.koResults?.third&&Object.keys(data.koResults.third).length) currentKORound="third";
-        else if(data.koResults?.sf&&Object.keys(data.koResults.sf).length) currentKORound="sf";
-        else if(data.koResults?.qf&&Object.keys(data.koResults.qf).length) currentKORound="qf";
-        else if(data.koResults?.r16&&Object.keys(data.koResults.r16).length) currentKORound="r16";
+        let isDone = false;
+        
+        if(data.koResults?.final&&Object.keys(data.koResults.final).length) { currentKORound="final"; isDone=true; }
+        else if(data.koResults?.third&&Object.keys(data.koResults.third).length) currentKORound="final";
+        else if(data.koResults?.sf&&Object.keys(data.koResults.sf).length) currentKORound="third";
+        else if(data.koResults?.qf&&Object.keys(data.koResults.qf).length) currentKORound="sf";
+        else if(data.koResults?.r16&&Object.keys(data.koResults.r16).length) currentKORound="qf";
+        else if(data.koResults?.r32&&Object.keys(data.koResults.r32).length) currentKORound="r16";
         else currentKORound="r32";
         
         if(!koState[currentKORound]||koState[currentKORound].length===0){
           if(data.knockoutState?.[currentKORound]) koState[currentKORound]=data.knockoutState[currentKORound];
         }
-        switchTab("standings");
-        toast(`Kaldığın yerden devam: ${getRoundName(currentKORound)}`);
+        
+        // Turnuva bittiyse sayfayı yenilediğinde puan durumuna değil doğrudan Sonuçlar sayfasına yönlendir.
+        if (isDone) {
+          switchTab("results");
+        } else {
+          switchTab("knockout");
+          toast(`Kaldığın yerden devam: ${getRoundName(currentKORound)}`);
+        }
       } else {
         renderMatchCard(currentMatchIdx);
         if(currentMatchIdx>0) toast(`Kaldığın yerden devam (Maç ${currentMatchIdx+1})`);
